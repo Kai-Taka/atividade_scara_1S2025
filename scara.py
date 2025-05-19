@@ -1,18 +1,22 @@
+import time
 import roboticstoolbox as rtb
 from spatialmath import SE3
+import numpy as np
+import matplotlib.pyplot as plt
 
-robot = rtb.models.Panda()
+# Define the links for the RR robot
+L1 = rtb.RevoluteDH(a=100)  # First link with length 100
+L2 = rtb.RevoluteDH(a=50)   # Second link with length 50
+
+# Create the robot with the defined links
+links = [L1, L2]
+robot = rtb.DHRobot(links, name='Robo planar')
+
+# Print the robot's DH parameters
 print(robot)
 
-Te = robot.fkine(robot.qr)  # forward kinematics
-print(Te)
+# Define the initial configuration
+initialPos = [np.pi/4, -np.pi/4]  # First joint at 45 degrees, second at -45 degrees
 
-Tep = SE3.Trans(0.6, -0.3, 0.1) * SE3.OA([0, 1, 0], [0, 0, -1])
-sol = robot.ik_LM(Tep)         # solve IK
-print(sol)
-
-q_pickup = sol[0]
-print(robot.fkine(q_pickup))    # FK shows that desired end-effector pose was achieved
-
-qt = rtb.jtraj(robot.qr, q_pickup, 50)
-robot.plot(qt.q, backend='pyplot', movie='panda1.gif')
+# Plot the robot with coordinate frames, joint vectors, base frame and end-effector
+robot.teach(initialPos)
