@@ -1,22 +1,23 @@
-import time
-import roboticstoolbox as rtb
-from spatialmath import SE3
 import numpy as np
-import matplotlib.pyplot as plt
+import roboticstoolbox as rtb
 
-# Define the links for the RR robot
-L1 = rtb.RevoluteDH(a=100)  # First link with length 100
-L2 = rtb.RevoluteDH(a=50)   # Second link with length 50
+# Define os elos para o robô RR
+L0 = rtb.PrismaticDH(alpha = np.pi/2, qlim=[0, 0]) #Devido ao comportamento da biblioteca será precisao definir um word frame. Uso de DH diferente
+L1 = rtb.PrismaticDH(alpha = -np.pi/2, qlim=[0, 30])
+L2 = rtb.PrismaticDH(qlim=[27.5, 27.5])# Primeiro elo prismático (0 a 30cm)
+L3 = rtb.RevoluteDH(a = 17)    # Segundo elo de rotação
+L4 = rtb.RevoluteDH(alpha = np.pi, a = 11)  # Terceiro elo de rotação
+L5 = rtb.PrismaticDH(qlim=[0, 20])  # Quarto elo prismático (0 a 20cm)
 
-# Create the robot with the defined links
-links = [L1, L2]
+# Cria o robô com os elos definidos
+links = [L0, L1, L2, L3, L4, L5]  # Removido L2, L3 e L4 temporariamente
 robot = rtb.DHRobot(links, name='Robo planar')
 
-# Print the robot's DH parameters
+# Imprime os parâmetros DH do robô
 print(robot)
 
-# Define the initial configuration
-initialPos = [np.pi/4, -np.pi/4]  # First joint at 45 degrees, second at -45 degrees
+# Define a configuração inicial
+initialPos = [0, 0, 27.5, np.pi/4, 0, 0]  # Configuração inicial: junta em 0
 
-# Plot the robot with coordinate frames, joint vectors, base frame and end-effector
-robot.teach(initialPos)
+# Plota o robô com sistemas de coordenadas, vetores das juntas, base e efetuador final
+robot.teach(initialPos)  # frame=True mostra os sistemas de coordenadas de cada elo
