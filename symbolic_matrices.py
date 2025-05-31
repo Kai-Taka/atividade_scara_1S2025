@@ -2,8 +2,8 @@ import sympy as sp
 import numpy as np
 
 # Define symbolic variables
-theta3, theta4 = sp.symbols('theta3 theta4')  # For revolute joints
-d1, d5 = sp.symbols('d1 d5')  # For prismatic joints
+theta2, theta3 = sp.symbols('theta2 theta3')  # For revolute joints
+d1, d4 = sp.symbols('d1 d4')  # For prismatic joints
 
 # Helper function to create the transformation matrix
 def create_transformation_matrix(theta, alpha, a, d):
@@ -18,23 +18,23 @@ def create_transformation_matrix(theta, alpha, a, d):
     ])
 
 # Create transformation matrices for each link
-# L0: Prismatic (α = π/2, d = 0 fixed)
-T0 = create_transformation_matrix(0, sp.pi/2, 0, 0)
+# L0: Prismatic (α = -π/2, d = 0 fixed)
+T0 = create_transformation_matrix(-sp.pi/2, -sp.pi/2, 0, 0)
 
-# L1: Prismatic (α = -π/2)
-T1 = create_transformation_matrix(0, -sp.pi/2, 0, d1)
+# L1: Prismatic (α = +π/2)
+T1 = create_transformation_matrix(0, +sp.pi/2, 0, d1)
 
 # L2: Prismatic (d = 27.5 fixed)
-T2 = create_transformation_matrix(0, 0, 0, 27.5)
+T2 = create_transformation_matrix(sp.pi/2, 0, 0, 27.5)
 
 # L3: Revolute (a = 17)
-T3 = create_transformation_matrix(theta3, 0, 17, 0)
+T3 = create_transformation_matrix(theta2, 0, 17, 0)
 
 # L4: Revolute (α = π, a = 11)
-T4 = create_transformation_matrix(theta4, sp.pi, 11, 0)
+T4 = create_transformation_matrix(theta3, sp.pi, 11, 0)
 
 # L5: Prismatic
-T5 = create_transformation_matrix(0, 0, 0, d5)
+T5 = create_transformation_matrix(0, 0, 0, d4)
 
 # Initialize pretty printing
 sp.init_printing(use_unicode=True)

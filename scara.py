@@ -1,23 +1,23 @@
 import numpy as np
 import roboticstoolbox as rtb
 
-# Define os elos para o robô RR
-L0 = rtb.PrismaticDH(alpha = np.pi/2, qlim=[0, 0]) #Devido ao comportamento da biblioteca será precisao definir um word frame. Uso de DH diferente
-L1 = rtb.PrismaticDH(alpha = -np.pi/2, qlim=[0, 30])
-L2 = rtb.PrismaticDH(qlim=[27.5, 27.5])# Primeiro elo prismático (0 a 30cm)
-L3 = rtb.RevoluteDH(a = 17)    # Segundo elo de rotação
-L4 = rtb.RevoluteDH(alpha = np.pi, a = 11)  # Terceiro elo de rotação
-L5 = rtb.PrismaticDH(qlim=[0, 20])  # Quarto elo prismático (0 a 20cm)
+# Define os parâmetros DH para o robô SCARA
+L0 = rtb.PrismaticDH(theta = -np.pi/2, alpha = -np.pi/2, qlim=[0, 0]) #Devido ao comportamento da biblioteca será precisao definir um word frame. Uso de DH diferente
+L1 = rtb.PrismaticDH(alpha = +np.pi/2, qlim=[0, 30])  # Junta prismática vertical com curso de 0 a 30cm
+L2 = rtb.PrismaticDH(theta = np.pi/2, qlim=[27.5, 27.5])# Primeiro elo prismático (0 a 30cm)
+L3 = rtb.RevoluteDH(a = 17)    # Primeira junta de rotação do braço com comprimento de 17cm
+L4 = rtb.RevoluteDH(alpha = np.pi, a = 11)  # Segunda junta de rotação do braço com comprimento de 11cm
+L5 = rtb.PrismaticDH(qlim=[0, 27.5])  # Junta prismática do efetuador final com curso de 0 a 27.5cm
 
-# Cria o robô com os elos definidos
-links = [L0, L1, L2, L3, L4, L5]  # Removido L2, L3 e L4 temporariamente
-robot = rtb.DHRobot(links, name='Robo planar')
+# Cria o robô SCARA com os elos definidos
+links = [L0, L1, L2, L3, L4, L5]
+robot = rtb.DHRobot(links, name='Robo SCARA')
 
-# Imprime os parâmetros DH do robô
+# Exibe os parâmetros DH do robô
 print(robot)
 
-# Define a configuração inicial
-initialPos = [0, 0, 27.5, np.pi/4, 0, 0]  # Configuração inicial: junta em 0
+# Define a configuração inicial das juntas do robô
+initialPos = [0, 0, 27.5, 0, 0, 0]  # Posição inicial com segunda junta rotacional a 45 graus
 
 # Plota o robô com sistemas de coordenadas, vetores das juntas, base e efetuador final
-robot.teach(initialPos)  # frame=True mostra os sistemas de coordenadas de cada elo
+robot.teach(initialPos)
