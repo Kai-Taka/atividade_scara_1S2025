@@ -20,7 +20,7 @@ print(robot)
 
 
 def Cinematica_direta():
-    initialPos = [0, 0, -90]
+    initialPos = [0, np.pi/2, -np.pi/2]
     robot.teach(initialPos)
 
 print(robot.jacob0([0, 0, 0]))

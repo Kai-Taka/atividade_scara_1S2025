@@ -184,7 +184,7 @@ void commandServos(const float q[]) {
   // Mapeia para a posição do servo.
   // IMPORTANTE: Ajuste o '90' e os limites (0, 180) conforme a montagem do seu robô.
   // '90' aqui representa a posição "zero" do sistema de coordenadas.
-  int servo1_pos = 90 + angle1_deg;
+  int servo1_pos =  angle1_deg;
   int servo2_pos = 90 + angle2_deg;
   int servo3_pos = 90 + angle3_deg;
   
