@@ -3,12 +3,17 @@ import sympy as sp
 import numpy as np
 import roboticstoolbox as rtb
 
+#Valores juntas
+link_1 = 80
+link_2 = 80
+erro_sim_real = 30
+caneta_altura = 0
 
 #Reduzindo o problema com coordenadas polares
 #Resonvendo caso 2D determinando theta e r
 
 x = float(input("Value for X coordinate: "))
-y = float(input("Value for Y coordinate: "))
+y = float(input("Value for Y coordinate: ")) + caneta_altura
 z = float(input("Value for Z coordinate: "))
 #Define barras
 a1, a2 = sp.symbols('a1 a2')
@@ -34,12 +39,12 @@ alpha, beta, gama = regra_dos_cossenos(a2, a1, r)
 
 #SIMULA ROBO RR
 # Calcula valores dos angulos e seta valores do DH
-alpha = float(alpha.subs({a1: 8, a2: 8}).evalf())
-beta = float(beta.subs({a1: 8, a2: 8}).evalf())
-gama = float(gama.subs({a1: 8, a2: 8}).evalf())
+alpha = float(alpha.subs({a1: link_1, a2: link_2}).evalf())
+beta = float(beta.subs({a1: link_1, a2: link_2}).evalf())
+gama = float(gama.subs({a1: link_1, a2: link_2}).evalf())
 print(f"Angles: alpha = {math.degrees(alpha):.2f}°, beta = {math.degrees(beta):.2f}°, gama = {math.degrees(gama):.2f}°")
-a1 = 8
-a2 = 8
+a1 = link_1
+a2 = link_2
 
 L1 = rtb.RevoluteDH(alpha = np.pi/2)
 L2 = rtb.RevoluteDH(a = a1)
@@ -50,9 +55,10 @@ robot = rtb.DHRobot(links, name='Robo articulado')
 print(robot)
 
 #Expressões para q1 e q2
-q1 = phi
+q1 = phi + (math.atan2(erro_sim_real, r_base))
 q2 = alpha + theta
 q3 = gama
 
 initialPos = [q1, q2, q3]
+print("q1:", math.degrees(q1), "q2:", math.degrees(q2), "q3:", math.degrees(q3))
 robot.teach(initialPos)

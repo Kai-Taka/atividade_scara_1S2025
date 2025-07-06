@@ -2,9 +2,9 @@ import numpy as np
 import roboticstoolbox as rtb
 
  # Define os parâmetros DH para o robô SCARA
-L1 = rtb.RevoluteDH(a = 0, d= 15.93 , alpha=np.pi/2)    
+L1 = rtb.RevoluteDH(a = 0, d = 15.93 , alpha=np.pi/2)    
 L2 = rtb.RevoluteDH(d = 52.3, a=80)  
-L3 = rtb.RevoluteDH(d=-22, a=80)  
+L3 = rtb.RevoluteDH(d=-22, a=80, offset=np.pi)  # Junta prismática do efetuador final com curso de 0 a 27.5cm
 
 """ L1 = rtb.RevoluteDH( d= 15.93 , alpha=np.pi/2)    # Primeira junta de rotação do braço com comprimento de 17cm
 L2 = rtb.RevoluteDH( a=80)  # Segunda junta de rotação do braço com comprimento de 11cm
@@ -20,7 +20,7 @@ print(robot)
 
 
 def Cinematica_direta():
-    initialPos = [0, np.pi/2, -np.pi/2]
+    initialPos = [0.13255153229667402, 1.5301586728222558, 1.1724175158799934]
     robot.teach(initialPos)
 
 print(robot.jacob0([0, 0, 0]))
