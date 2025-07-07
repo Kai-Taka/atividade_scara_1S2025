@@ -1,5 +1,6 @@
 import numpy as np
 import roboticstoolbox as rtb
+from spatialmath import SE3
 
  # Define os parâmetros DH para o robô SCARA
 L1 = rtb.RevoluteDH(a = 0, d = 15.93 , alpha=np.pi/2)    
@@ -20,10 +21,17 @@ print(robot)
 
 
 def Cinematica_direta():
-    initialPos = [0.13255153229667402, 1.5301586728222558, 1.1724175158799934]
+    initialPos = [1.274207295264787, 0.41982801281378185, 2.4352575721436325]
     robot.teach(initialPos)
 
 print(robot.jacob0([0, 0, 0]))
+T = SE3(0, 80, 0)
+
+# Calcula a cinemática inversa
+sol = robot.ikine_LM(T)
+
+print("Solução da cinemática inversa para (0,0,0):")
+print(sol)
 
 Cinematica_direta() 
 

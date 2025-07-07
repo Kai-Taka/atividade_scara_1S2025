@@ -11,9 +11,9 @@ def format_angle(angle):
 
 if __name__ == "__main__":
     port = "COM3"  # Default value, can be changed
-    ci = CinematicaInversa()
-    # Initial position: q1=0, q2=90, q3=90
-    last_q1 = 0
+    ci = CinematicaInversa(caneta_altura=0, erro_sim_real=0)
+    # Initial position: q1=90, q2=90, q3=90
+    last_q1 = 90
     last_q2 = 90
     last_q3 = 90
     initial_cmd = f"{last_q1:03d}{last_q2:03d}{last_q3:03d}"

@@ -10,7 +10,7 @@ class CinematicaInversa:
     Classe para calcular a cinemática inversa de um robô articulado com
     Recebe erros para compensar posição do EE
     """
-    def __init__(self, link_1=80, link_2=80, erro_sim_real=30, caneta_altura=0):
+    def __init__(self, link_1=80, link_2=80, erro_sim_real=20, caneta_altura=0):
         self.link_1 = link_1
         self.link_2 = link_2
         self.erro_sim_real = erro_sim_real
@@ -51,6 +51,7 @@ class CinematicaInversa:
         q1 = phi + (np.arctan2(self.erro_sim_real, r_base)) #Trig para compensar erro do EE
         q2 = alpha + theta
         q3 = gama
+        print("q1:", q1, "q2:", q2, "q3:", q3)
         print("q1:", np.degrees(q1), "q2:", np.degrees(q2), "q3:", np.degrees(q3))
         return [q1, q2, q3]
 
@@ -58,7 +59,6 @@ if __name__ == "__main__":
     x = float(input("Value for X coordinate: "))
     y = float(input("Value for Y coordinate: "))
     z = float(input("Value for Z coordinate: "))
-    ci = CinematicaInversa()
+    ci = CinematicaInversa(caneta_altura=0, erro_sim_real=0, link_1=80, link_2=80)
     result = ci.calcular(x, y, z)
     ci.robot.teach(result)
-
