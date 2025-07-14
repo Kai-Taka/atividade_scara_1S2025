@@ -46,12 +46,38 @@ if __name__ == "__main__":
             # Calculate steps for each joint
             velocidade_angular = 90
             interval = 1/velocidade_angular #Resolution of each step in seconds
-            while q1_cur != q1_des or q2_cur != q2_des or q3_cur != q3_des:
+            while q1_cur != q1_des:
                 #Edit vars
                 if q1_cur != q1_des:
                     q1_cur = round(q1_cur + 1 if q1_des > q1_cur else q1_cur - 1)
+                #Set command
+                cmd = f"{q1_cur:03d}{q2_cur:03d}{q3_cur:03d}"
+                while True:
+                    ser.write((cmd + '\n').encode())
+                    line = ser.readline()
+                    print(f"Moving actuators, received: {line}")
+                    if line != b'':
+                        break
+                    else:
+                        time.sleep(0.005)
+                time.sleep(interval)
+            while q2_cur != q2_des:
+                #Edit vars
                 if q2_cur != q2_des:
                     q2_cur = round(q2_cur + 1 if q2_des > q2_cur else q2_cur - 1)
+                #Set command
+                cmd = f"{q1_cur:03d}{q2_cur:03d}{q3_cur:03d}"
+                while True:
+                    ser.write((cmd + '\n').encode())
+                    line = ser.readline()
+                    print(f"Moving actuators, received: {line}")
+                    if line != b'':
+                        break
+                    else:
+                        time.sleep(0.005)
+                time.sleep(interval)
+            while q3_cur != q3_des:
+                #Edit vars
                 if q3_cur != q3_des:
                     q3_cur = round(q3_cur + 1 if q3_des > q3_cur else q3_cur - 1)
                 #Set command
