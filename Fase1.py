@@ -11,7 +11,7 @@ def format_angle(angle):
 
 if __name__ == "__main__":
     port = "COM3"  # Default value, can be changed
-    ci = CinematicaInversa(caneta_altura=150)
+    ci = CinematicaInversa(caneta_altura=-5, erro_sim_real=30)
     # Initial position: q1=0, q2=90, q3=90
     last_q1 = 90
     last_q2 = 90
@@ -37,47 +37,36 @@ if __name__ == "__main__":
                 print("Invalid input. Try again.")
                 continue
             q1, q2, q3 = ci.calcular(x, y, z)
-            q1_str = format_angle(q1)
-            q2_str = format_angle(q2)
-            q3_str = format_angle(q3)
-            # Step 1: Move q1 only
-            cmd1 = f"{q1_str}{last_q2:03d}{last_q3:03d}"
-            while True:
-                ser.write((cmd1 + '\n').encode())
-                line = ser.readline()
-                if line != b'':
-                    print(f"Moved q1, received: {line}")
-                    break
-                else:
-                    print("Waiting for robot to respond to q1...")
-                    time.sleep(0.5)
-            time.sleep(1)
-            # Step 2: Move q2
-            cmd2 = f"{q1_str}{q2_str}{last_q3:03d}"
-            while True:
-                ser.write((cmd2 + '\n').encode())
-                line = ser.readline()
-                if line != b'':
-                    print(f"Moved q2, received: {line}")
-                    break
-                else:
-                    print("Waiting for robot to respond to q2...")
-                    time.sleep(0.5)
-            time.sleep(1)
-            # Step 3: Move q3
-            cmd3 = f"{q1_str}{q2_str}{q3_str}"
-            while True:
-                ser.write((cmd3 + '\n').encode())
-                line = ser.readline()
-                if line != b'':
-                    print(f"Moved q3, received: {line}")
-                    break
-                else:
-                    print("Waiting for robot to respond to q3...")
-                    time.sleep(0.5)
-            # Update last positions
-            last_q1 = int(q1_str)
-            last_q2 = int(q2_str)
-            last_q3 = int(q3_str)
-            print(f"Position set: {cmd3}")
+            q1_des = round(np.clip(np.degrees(q1), 0, 180))
+            q2_des = round(np.clip(np.degrees(q2), 0, 180))
+            q3_des = round(np.clip(np.degrees(q3), 0, 180))
+            q1_cur = last_q1
+            q2_cur = last_q2
+            q3_cur = last_q3
+            # Calculate steps for each joint
+            velocidade_angular = 90
+            interval = 1/velocidade_angular #Resolution of each step in seconds
+            while q1_cur != q1_des or q2_cur != q2_des or q3_cur != q3_des:
+                #Edit vars
+                if q1_cur != q1_des:
+                    q1_cur = round(q1_cur + 1 if q1_des > q1_cur else q1_cur - 1)
+                if q2_cur != q2_des:
+                    q2_cur = round(q2_cur + 1 if q2_des > q2_cur else q2_cur - 1)
+                if q3_cur != q3_des:
+                    q3_cur = round(q3_cur + 1 if q3_des > q3_cur else q3_cur - 1)
+                #Set command
+                cmd = f"{q1_cur:03d}{q2_cur:03d}{q3_cur:03d}"
+                while True:
+                    ser.write((cmd + '\n').encode())
+                    line = ser.readline()
+                    print(f"Moving actuators, received: {line}")
+                    if line != b'':
+                        break
+                    else:
+                        time.sleep(0.005)
+                time.sleep(interval)
+            last_q1 = int(round(q1_des))
+            last_q2 = int(round(q2_des))
+            last_q3 = int(round(q3_des))
+            print(f"Position set: {last_q1:03d}{last_q2:03d}{last_q3:03d}")
             print("---")

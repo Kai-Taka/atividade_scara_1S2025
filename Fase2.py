@@ -37,27 +37,29 @@ if __name__ == "__main__":
                 print("Invalid input. Try again.")
                 continue
             q1, q2, q3 = ci.calcular(x, y, z)
-            q1_des = np.clip(np.degrees(q1), 0, 180)
-            q2_des = np.clip(np.degrees(q2), 0, 180)
-            q3_des = np.clip(np.degrees(q3), 0, 180)
+            q1_des = round(np.clip(np.degrees(q1), 0, 180))
+            q2_des = round(np.clip(np.degrees(q2), 0, 180))
+            q3_des = round(np.clip(np.degrees(q3), 0, 180))
             q1_cur = last_q1
             q2_cur = last_q2
             q3_cur = last_q3
             # Calculate steps for each joint
-            steps_q1 = abs(int(round(q1_des - q1_cur)))
-            steps_q2 = abs(int(round(q2_des - q2_cur)))
-            steps_q3 = abs(int(round(q3_des - q3_cur)))
-            max_steps = max(steps_q1, steps_q2, steps_q3, 1)
-            total_time = 1
-            interval = total_time / max_steps
-            for i in range(1, max_steps + 1):
-                q1_step = int(round(q1_cur + (q1_des - q1_cur) * i / max_steps))
-                q2_step = int(round(q2_cur + (q2_des - q2_cur) * i / max_steps))
-                q3_step = int(round(q3_cur + (q3_des - q3_cur) * i / max_steps))
-                cmd = f"{q1_step:03d}{q2_step:03d}{q3_step:03d}"
+            velocidade_angular = 90
+            interval = 1/velocidade_angular #Resolution of each step in seconds
+            while q1_cur != q1_des or q2_cur != q2_des or q3_cur != q3_des:
+                #Edit vars
+                if q1_cur != q1_des:
+                    q1_cur = round(q1_cur + 1 if q1_des > q1_cur else q1_cur - 1)
+                if q2_cur != q2_des:
+                    q2_cur = round(q2_cur + 1 if q2_des > q2_cur else q2_cur - 1)
+                if q3_cur != q3_des:
+                    q3_cur = round(q3_cur + 1 if q3_des > q3_cur else q3_cur - 1)
+                #Set command
+                cmd = f"{q1_cur:03d}{q2_cur:03d}{q3_cur:03d}"
                 while True:
                     ser.write((cmd + '\n').encode())
                     line = ser.readline()
+                    print(f"Moving actuators, received: {line}")
                     if line != b'':
                         break
                     else:
