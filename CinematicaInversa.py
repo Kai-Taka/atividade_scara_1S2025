@@ -39,10 +39,16 @@ class CinematicaInversa:
         """        
         Calcula a cinemática inversa do robô para as coordenadas (x, y, z).
         """
+        phi = np.arctan2(y, x)
+        
+        x = x + self.erro_sim_real*np.sin(phi)
+        y = y + self.erro_sim_real*np.cos(phi)
+        
+        phi = np.arctan2(y, x)
         z = z + self.caneta_altura
         r = np.sqrt(x**2 + y**2 + z**2)
         r_base = np.sqrt(x**2 + y**2)
-        phi = np.arctan2(y, x)
+        
         theta = np.arctan2(z, r_base)
         print(f"Polar coordinates: r = {r:.2f}, phi = {np.degrees(phi):.2f}°, theta = {np.degrees(theta):.2f}°")
         alpha, beta, gama = self.regra_dos_cossenos(self.link_2, self.link_1, r)
