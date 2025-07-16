@@ -16,6 +16,7 @@ if __name__ == "__main__":
     last_q1 = 90
     last_q2 = 90
     last_q3 = 90
+    total_time = 1
     initial_cmd = f"{last_q1:03d}{last_q2:03d}{last_q3:03d}"
     with serial.Serial(port, baudrate=9600, timeout=5) as ser:
         # Send initial position once
@@ -48,7 +49,6 @@ if __name__ == "__main__":
             steps_q2 = abs(int(round(q2_des - q2_cur)))
             steps_q3 = abs(int(round(q3_des - q3_cur)))
             max_steps = max(steps_q1, steps_q2, steps_q3, 1)
-            total_time = 1
             interval = total_time / max_steps
             for i in range(1, max_steps + 1):
                 q1_step = int(round(q1_cur + (q1_des - q1_cur) * i / max_steps))
