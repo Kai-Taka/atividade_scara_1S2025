@@ -41,7 +41,7 @@ class CinematicaInversa:
         """
         phi = np.arctan2(y, x)
         
-        x = x + self.erro_sim_real*np.sin(phi)
+        x = x + self.erro_sim_real*np.sin(phi) - 60
         y = y + self.erro_sim_real*np.cos(phi)
         
         phi = np.arctan2(y, x)

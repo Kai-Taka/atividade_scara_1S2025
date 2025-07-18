@@ -23,7 +23,7 @@ def discretize_line(initial, final, max_size):
         return []
     points = []
     r, phi, theta = transform2polar(final[0] - initial[0], final[1] - initial[1], final[2] - initial[2])
-    steps = r//10 + 1 #Round up
+    steps = r//max_size + 1 #Round up
     print(f"r: {r}, phi: {phi}, theta: {theta}, steps: {steps}")
     for step in range(int(steps)):
         projecao_xy = max_size * step * np.cos(theta)
@@ -42,7 +42,7 @@ def discretize_line(initial, final, max_size):
 
 if __name__ == "__main__":
     port = "COM3"  # Default value, can be changed
-    ci = CinematicaInversa(caneta_altura=-5, erro_sim_real=30)
+    ci = CinematicaInversa(caneta_altura=-10, erro_sim_real=0)
     # Initial position: q1=0, q2=90, q3=90
     last_q1 = 90
     last_q2 = 90
@@ -50,9 +50,9 @@ if __name__ == "__main__":
     last_x = 0
     last_y = 80
     last_z = 80
-    max_size = 10  # Maximum size of each step
+    max_size = 2  # Maximum size of each step
     discret_point_interval = 0.01
-    total_time = 1  # Total to move all joints in seconds
+    total_time = 0.3  # Total to move all joints in seconds
     initial_cmd = f"{last_q1:03d}{last_q2:03d}{last_q3:03d}"
     with serial.Serial(port, baudrate=9600, timeout=5) as ser:
         # Send initial position once
